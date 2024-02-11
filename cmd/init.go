@@ -41,10 +41,7 @@ func runInit() {
     config.CreateConfigFile()
   }
 
-  configFile := config.GetConfigFile()
-  config.AppendMigrationToConfigFile(configFile, &migratingFrom, &migratingTo)
-
-  defer configFile.Close()
+  config.AppendMigrationToConfigFile(&migratingFrom, &migratingTo)
 }
 
 var initCmd = &cobra.Command{
