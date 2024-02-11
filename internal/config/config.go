@@ -104,6 +104,7 @@ func AppendMigrationToConfigFile(configFile *os.File, from *string, to *string) 
     cwd,
     *from,
     *to,
+    make(map[string]bool),
   }
 
   var configYml models.Config
