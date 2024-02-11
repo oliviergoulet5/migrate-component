@@ -1,8 +1,8 @@
 package config 
 
 import (
-  "fmt"
   "io/ioutil"
+  "log"
   "os"
   "path/filepath"
   "github.com/oliviergoulet5/migrate-component/internal/models"
@@ -15,15 +15,14 @@ import (
 func GetConfigFile() *os.File {
   homeDir, err := os.UserHomeDir()
   if err != nil {
-    fmt.Println("Error:", err)
-    panic(err)
+    log.Fatal(err)
   }
 
   configFilePath := filepath.Join(homeDir, ".config/migrate-component.yml")
 
   file, err := os.OpenFile(configFilePath, os.O_RDWR|os.O_CREATE, 0644)
   if err != nil {
-    panic(err)
+    log.Fatal(err)
   }
   
   return file
@@ -36,15 +35,14 @@ func GetConfigFile() *os.File {
 func HasConfigFile() bool {
   homeDir, err := os.UserHomeDir()
   if err != nil {
-    fmt.Println("Error:", err)
-    panic(err)
+    log.Fatal(err)
   }
   
   configFilePath := filepath.Join(homeDir, ".config/migrate-component.yml")
 
   configInfo, err := os.Stat(configFilePath)
   if err != nil {
-    panic(err)
+    log.Fatal(err)
   }
 
   return configInfo.IsDir()
@@ -54,30 +52,26 @@ func HasConfigFile() bool {
 func CreateConfigFile() {
   homeDir, err := os.UserHomeDir()
   if err != nil {
-    fmt.Println("Error:", err)
-    return
+    log.Fatal(err)
   }
 
   configDir := filepath.Join(homeDir, ".config")
   configDirInfo, err := os.Stat(configDir)
   if err != nil {
-    fmt.Println("Error, could not find config dir")
-    return
+    log.Fatal(err)
   }
 
   if !configDirInfo.IsDir() {
     // create it
     if err := os.MkdirAll(configDir, os.ModePerm); err != nil {
-      fmt.Println("Error when creating ~/.config")
-      return
+      log.Fatal(err)
     }
   }
   
   configFilePath := filepath.Join(homeDir, ".config/migrate-component.yml")
   file, err := os.Create(configFilePath) 
   if err != nil {
-    fmt.Println("Error when creating migrate-component.yml in config directory")
-    return
+    log.Fatal(err)
   }
 
   defer file.Close()
@@ -92,12 +86,12 @@ func CreateConfigFile() {
 func AppendMigrationToConfigFile(configFile *os.File, from *string, to *string) {
   cwd, err := os.Getwd()
   if err != nil {
-    return
+    log.Fatal(err)
   }
 
   fileContent, err := ioutil.ReadAll(configFile)
   if err != nil {
-    panic(err)
+    log.Fatal(err)
   }
 
   migration := models.Migration{
@@ -109,19 +103,19 @@ func AppendMigrationToConfigFile(configFile *os.File, from *string, to *string) 
 
   var configYml models.Config
   if err := yaml.Unmarshal([]byte(fileContent), &configYml); err != nil {
-    panic(err)
+    log.Fatal(err)
   }
 
   configYml.Migrations = append(configYml.Migrations, migration)
 
   yml, err := yaml.Marshal(configYml)
   if err != nil {
-    panic(err)
+    log.Fatal(err)
   }
 
   _, err = configFile.Write(yml)
   if err != nil {
-    panic(err)
+    log.Fatal(err)
   }
 }
 
