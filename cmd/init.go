@@ -35,17 +35,14 @@ func runInit() {
     fmt.Printf("Prompt failed %v\n", err)
     return
   }
-
-  _ = migratingFrom
-  _ = migratingTo
   
   // If the user does not have a configuration file, create one.
-  if (!config.HasConfig()) {
-    config.CreateConfig()
+  if (!config.HasConfigFile()) {
+    config.CreateConfigFile()
   }
 
-  configFile := config.GetConfig()
-  config.AppendMigrationToConfig(configFile, &migratingFrom, &migratingTo)
+  configFile := config.GetConfigFile()
+  config.AppendMigrationToConfigFile(configFile, &migratingFrom, &migratingTo)
 
   defer configFile.Close()
 }

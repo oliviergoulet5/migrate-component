@@ -9,7 +9,10 @@ import (
   "gopkg.in/yaml.v3"
 )
 
-func GetConfig() *os.File {
+// Retrieve the configuration file from the user's home directory.
+// Returns:
+//  The configuration file.
+func GetConfigFile() *os.File {
   homeDir, err := os.UserHomeDir()
   if err != nil {
     fmt.Println("Error:", err)
@@ -26,7 +29,11 @@ func GetConfig() *os.File {
   return file
 }
 
-func HasConfig() bool {
+// Check whether or not the user has a configuration file in their home
+// directory.
+// Returns:
+//  A boolean value indicating if user has a configuration file.
+func HasConfigFile() bool {
   homeDir, err := os.UserHomeDir()
   if err != nil {
     fmt.Println("Error:", err)
@@ -43,7 +50,8 @@ func HasConfig() bool {
   return configInfo.IsDir()
 }
 
-func CreateConfig() {
+// Creates a configuration file under ~/.config.
+func CreateConfigFile() {
   homeDir, err := os.UserHomeDir()
   if err != nil {
     fmt.Println("Error:", err)
@@ -75,7 +83,13 @@ func CreateConfig() {
   defer file.Close()
 }
 
-func AppendMigrationToConfig(configFile *os.File, from *string, to *string) {
+// Appends a migration entry to the configuration file. It includes the project
+// path, the migration from and to.
+// Parameters:
+//  configFile: The configuration file.
+//  from: The component library that the user is migrating away from.
+//  to: The component library that the user is migrating towards.
+func AppendMigrationToConfigFile(configFile *os.File, from *string, to *string) {
   cwd, err := os.Getwd()
   if err != nil {
     return
