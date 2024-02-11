@@ -2,6 +2,7 @@ package cmd
 
 import (
   "fmt"
+  "github.com/oliviergoulet5/migrate-component/internal/analyzer"
   "github.com/oliviergoulet5/migrate-component/internal/config"
   "github.com/spf13/cobra"
   "github.com/manifoldco/promptui"
@@ -42,6 +43,8 @@ func runInit() {
   }
 
   config.AppendMigrationToConfigFile(&migratingFrom, &migratingTo)
+
+  analyzer.AutoDetectComponents();
 }
 
 var initCmd = &cobra.Command{
